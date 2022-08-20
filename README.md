@@ -108,6 +108,33 @@ gitaly['env'] = {
 }
 ~~~
 
+## postgresql配置
+
+```shell
+# postgresql可供远程连接配置信息
+
+# postgresql 配置
+postgresql['listen_address'] = '0.0.0.0'
+postgresql['port'] = 54320
+# 免密码认证ip
+postgresql['trust_auth_cidr_addresses'] = %w(127.0.0.1/24)
+# 需密码认证ip
+postgresql['md5_auth_cidr_addresses'] = %w(192.168.31.0/24)
+postgresql['sql_user'] = "gitlab"
+postgresql['sql_user_password'] = Digest::MD5.hexdigest "密码" << postgresql['sql_user']
+# postgresql['hostssl'] = true
+gitlab_rails['db_host'] = '127.0.0.1'
+gitlab_rails['db_port'] = 54320
+gitlab_rails['db_username'] = "gitlab"
+# 如果通过 TCP/IP 连接到 PostgreSQL，并且从上面设置的 postgresql['md5_auth_cidr_addresses'] 块中的一个实例连接到 PostgreSQL，则必须提供。
+# 如果您连接到 127.0.0.1 并且已经配置了 postgresql['trust_auth_cidr_addresses'] 以包含它，则这不是必需的
+# gitlab_rails['db_password'] = "密码"
+gitlab_rails['db_database'] = "gitlabhq_production"
+
+```
+
+
+
 > 使配置生效： gitlab-ctl reconfigure
 
 # Ruby安装
